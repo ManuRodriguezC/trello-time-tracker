@@ -1,4 +1,7 @@
 import { TaskType } from "@/types"
+import BoardWrapper from "./BoardWrapper"
+import BoardOptions from "./BoardOptions"
+import { Ellipsis } from "lucide-react"
 
 type Props = {
     task: TaskType
@@ -6,8 +9,13 @@ type Props = {
 
 export default function Task({ task }: Props) {
     return (
-        <div key={task.id} className="p-2 bg-muted rounded-sm text-primary">
-            {task.title}
-        </div>
+        <BoardWrapper id={task.id} className="p-2 bg-muted rounded-sm text-primary">
+            <div key={task.id}>
+                {task.title}
+            </div>
+            <BoardOptions className="p-1 hover:bg-black/10">
+                <Ellipsis size={16}/>
+            </BoardOptions>
+        </BoardWrapper>
     )
 }

@@ -52,7 +52,7 @@ export default function Aside() {
                 <div id="boards-containers" className="flex flex-col">
                     {
                         boards.map(board => (
-                            <div key={board.id} className="px-4 py-1 hover:bg-muted-foreground font-normal">
+                            <div key={board.id} className="px-4 py-1 hover:bg-slate-300 rounded-sm muted-foreground font-normal">
                                 <BoardWrapper id={`board-${board.id}`}>
                                     <h3 className="cursor-pointer">{board.title}</h3>
                                     <BoardOptions>

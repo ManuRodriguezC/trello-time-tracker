@@ -1,6 +1,7 @@
 import React from "react"
+import { cn } from "@/lib/utils"
 
-type Props = {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
     id: string
     children: React.ReactNode
 }
@@ -25,14 +26,20 @@ const handleMouseLeave = (id: string) => {
     }
 }
 
-export default function BoardWrapper({ id, children}: Props) {
+export default function BoardWrapper({ id, children, ...rest }: Props) {
+    const { className } = rest
     return (
         <div
+            {...rest}
             onMouseEnter={() => handleMouseEnter(id)}
             onMouseLeave={() => handleMouseLeave(id)}
             id={id}
-            className="board-wrapper flex justify-between items-center">
+            className={cn(
+                "board-wrapper flex justify-between items-center",
+                className
+            )}>
             {children}
+
         </div>
     )
 

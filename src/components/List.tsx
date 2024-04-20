@@ -2,14 +2,25 @@ import BoardWrapper from "./BoardWrapper";
 import BoardOptions from "./BoardOptions";
 import { Separator } from "./ui/separator";
 import { Plus } from "lucide-react";
-import type { List } from "@/types"
+import type { List as TypeList, TaskType } from "@/types"
 import Task from "./Task"
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import { animations } from "@formkit/drag-and-drop";
 
 type Props = {
-    list: List
+    list: TypeList,
+    boardName: string,
 }
 
-export default function List({ list }: Props) {
+
+export default function List({ list, boardName }: Props) {
+    const [todoList, todos] = useDragAndDrop<HTMLDivElement, TaskType>(
+        list.tasks,
+        {
+            group: boardName,
+            plugins: [animations()]
+        }
+    )
     return (
         <div
             key={list.id}
@@ -17,9 +28,9 @@ export default function List({ list }: Props) {
             <div className="flex flex-col gap-3 items-center">
                 <h3 className="font-semibold">{list.title}</h3>
                 <Separator />
-                <div id={`list-${list.id}-tasks`} className="flex flex-col gap-3 w-full">
+                <div ref={todoList} id={`list-${list.id}-tasks`} className="flex flex-col gap-3 w-full">
                     {
-                        list.tasks.map(task => (
+                        todos.map(task => (
                             <Task key={`task-${task.id}`} task={task} />
                         ))
                     }
