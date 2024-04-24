@@ -1,62 +1,26 @@
 import Header from "./components/Header"
 import Aside from "./components/Aside"
+/*
 import Board from "./components/Board"
 import { Theme } from "./types"
+*/
 import { useState } from "react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { cn } from "./lib/utils"
+import { useUserStore } from "./utils/user"
+import SetUserName from "./components/setUserName"
+import { Outlet } from "react-router-dom"
 
 function App() {
 
-  const board = {
-    id: '1',
-    title: 'Tablero 1',
-    lists: [
-      {
-        id: '1',
-        title: 'Lista 1',
-        tasks: [
-          { id: '1', title: 'Tarea 1'},
-          { id: '2', title: 'Crea una interfas para la app'},
-          { id: '3', title: 'Tarea 3'},
-
-        ]
-      },
-      {
-        id: '2',
-        title: 'Lista 2',
-        tasks: [
-          { id: '4', title: 'Tarea 4'},
-          { id: '5', title: 'Tarea 5'},
-          { id: '6', title: 'Tarea 6'},
-
-        ]
-      },
-      {
-        id: '3',
-        title: 'Lista 3',
-        tasks: [
-          { id: '7', title: 'Tarea 7'},
-          { id: '8', title: 'Crea una interfas para la app'},
-          { id: '9', title: 'Tarea 9'},
-
-        ]
-      },
-      {
-        id: '4',
-        title: 'Lista 4',
-        tasks: [
-          { id: '10', title: 'Tarea 10'},
-          { id: '11', title: 'Tarea 11'},
-          { id: '12', title: 'Tarea 12'},
-
-        ]
-      }
-    ],
-    theme: 'velustro' as Theme
-  }
-
+  const { user } = useUserStore()
   const [asideOpen, setAsideOpen] = useState(false)
+
+  if (!user || user.length === 0) {
+    return (
+      <SetUserName defaultOpen={true}/>
+    )
+  }
 
   return (
     <div className="flex flex-col h-screen">
@@ -103,7 +67,8 @@ function App() {
         <div
           id="content"
           className={`${asideOpen ? 'w-3/4 lg:w-3/4 xl:w-4/5' : 'w-full'}`}>
-          <Board board={board}/>
+            <Outlet />
+            {/*<Board board={board}/>*/}
         </div>
       </main>
     </div>

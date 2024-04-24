@@ -1,6 +1,6 @@
 import { Theme } from "@/types";
 import React, { MouseEvent } from "react"
-import { ThemeOption } from "./Board";
+import { ThemeOption } from "./ThemesOptions";
 
 type Props = {
     themeOption: ThemeOption

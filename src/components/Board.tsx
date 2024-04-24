@@ -1,46 +1,62 @@
-import { Theme, type Board } from "@/types"
+import { Board as TypeBoard, Theme} from "@/types"
 import { Separator } from "./ui/separator";
 import List from "./List";
 import { Ellipsis, Plus } from "lucide-react";
-import { Lumiflex, Novatrix, Opulento, Tranquiluxe, Velustro } from "uvcanvas"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog";
-import { DialogDescription } from "@radix-ui/react-dialog";
-import { SetStateAction, useState, Dispatch, useEffect } from "react";
-import ThemeOptions from "./ThemeOptions";
+import { useParams } from "react-router-dom";
+import { useBoardStore } from "@/utils/board";
+import { useEffect, useState } from "react";
+import SetBoardTheme from "./SetBoardTheme";
+import SetBoardTitle from "./SetBoardTitle";
+import { themes } from "./ThemesOptions";
+import SetBoardremove from "./SetBoardDelete";
 
 
-type Props = {
-    board: Board;
-}
+export default function Board() {
+    const { boards, setBoard: setNewBoard, removeBoard } = useBoardStore()
+    const { boardId } = useParams()
 
-export type ThemeOption = {
-    id: Theme,
-    component: JSX.Element
-}
-
-const themes: ThemeOption[] = [
-    { id: 'lumiflex', component: <Lumiflex /> },
-    { id: 'novatrix', component: <Novatrix /> },
-    { id: 'velustro', component: <Velustro /> },
-    { id: 'opulento', component: <Opulento /> },
-    { id: 'tranquiluxe', component: <Tranquiluxe /> },
-]
-
-export default function Board({ board }: Props) {
+    const [board, setBoard] = useState<TypeBoard>(boards.find(currBoard => currBoard.id == boardId)!)
 
     const [themeMenuOpen, setThemeMenuOpen] = useState(false)
-    const [themeView, setThemeView] = useState<Theme>(board.theme)
+    const [titleMenuOpen, setTitleMenuOpen] = useState(false)
+    const [removeMenuOpen, setRemoveMenuOpen] = useState(false)
+    
+    const [title, setTitle] = useState(board.title)
+    const [theme, setTheme] = useState<Theme>(board.theme)
+    const [remove, setRemove] = useState<boolean>(false)
 
-    const renderCurrentTheme = () => {
-        const currentTheme = themes.find(item => item.id === themeView);
-        return currentTheme ? currentTheme.component : null;
-    };
+    useEffect(() => {
+        const newBoard = {
+            ...board,
+            title,
+            theme
+        }
+
+        setBoard(newBoard)
+        setNewBoard(newBoard)
+    }, [title, theme])
+
+    useEffect(() => {
+        if (remove && boardId) {
+            removeBoard(boardId)
+        }
+    }, [remove])
+
+    useEffect(() => {
+        setTheme(board.theme)
+        setTitle(board.title)
+    }, [board])
+
+    useEffect(() => {
+        setBoard(boards.find(board => board.id === boardId)!)
+    }, [boardId])
+
 
     return (
         <section className="w-full h-full bg-cover relative overflow-hidden">
             <div className="w-screen h-full absolute">
-                {renderCurrentTheme()}
+                {themes.find(themeOption => themeOption.id === theme)?.component}
             </div>
             
             <div className="absolute top-0 left-0 w-full h-[calc(100vh-9.2rem)]">
@@ -48,7 +64,7 @@ export default function Board({ board }: Props) {
                     id="board-header"
                     className="w-full h-24 flex items-center p-4 bg-slate-800
                     bg-opacity-60 text-primary-foreground justify-between shadow-xl">
-                    <h2 className="pl-4 font-semibold text-3xl ">{board.title}</h2>
+                    <h2 className="pl-4 font-semibold text-3xl ">{title}</h2>
                         <DropdownMenu>
                             <DropdownMenuTrigger>
                                 <div className="p-1 hover:bg-slate-900 hover:opacity-25 rounded-lg cursor-pointer">
@@ -56,20 +72,20 @@ export default function Board({ board }: Props) {
                                 </div>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent>
-                                <DropdownMenuLabel className="text-lg">
-                                    Board
+                                <DropdownMenuLabel className="text-xl">
+                                    {title}
                                 </DropdownMenuLabel>
 
                                 <Separator />
 
-                                <DropdownMenuItem className="cursor-pointer">
-                                    Rename
+                                <DropdownMenuItem onClick={() => setTitleMenuOpen(true)} className="cursor-pointer">
+                                    Cambiar Nombre
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onClick={() => setThemeMenuOpen(true)} className="cursor-pointer">
-                                    Change Theme
+                                    Cambiar Tema
                                 </DropdownMenuItem>
-                                <DropdownMenuItem className="text-destructive cursor-pointer">
-                                    Delete
+                                <DropdownMenuItem onClick={() => setRemoveMenuOpen(true)} className="text-destructive cursor-pointer">
+                                    Borrar Tablero
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -92,54 +108,9 @@ export default function Board({ board }: Props) {
                     </div>
                 </div>
             </div>
-            <ThemeMenu open={themeMenuOpen} setOpen={setThemeMenuOpen} setTheme={setThemeView}/>
+            <SetBoardTheme open={themeMenuOpen} setOpen={setThemeMenuOpen} setTheme={setTheme}/>
+            <SetBoardTitle  open={titleMenuOpen} setOpen={setTitleMenuOpen} setTitle={setTitle}/>
+            <SetBoardremove open={removeMenuOpen} setOpen={setRemoveMenuOpen} setDelete={setRemove}/>
         </section>
-    )
-}
-
-
-
-const ThemeMenu = ({ open, setOpen, setTheme }: {
-    open: boolean;
-    setOpen: Dispatch<SetStateAction<boolean>>;
-    setTheme: Dispatch<SetStateAction<Theme>>;
-}) => {
-
-    const [themeAux, setThemeAux] = useState<Theme>()
-
-    useEffect(() => {
-        if (!themeAux) return
-        setTheme(themeAux)
-        setOpen(false)
-    }, [themeAux])
-
-    return (
-        <Dialog open={open}>
-            <DialogTrigger className="text-sm pl-2"></DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                <DialogTitle>Change Theme</DialogTitle>
-                <DialogDescription asChild>
-                    <div className="flex flex-wrap justify-center">
-                        {
-                            themes.map(theme => (
-                                <ThemeOptions key={theme.id} setTheme={setThemeAux} themeOption={theme} />
-                            ))
-                        }
-                    </div>
-                </DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                    <DialogClose>
-                        <button
-                            type="button"
-                            onClick={() => setOpen(false)}
-                            className="mt-4 px-2 py-1 bg-destructive rounded-md text-primary-foreground hover:opacity-75">
-                            Close
-                        </button>
-                    </DialogClose>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
     )
 }
