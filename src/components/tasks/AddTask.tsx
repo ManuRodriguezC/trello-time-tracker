@@ -12,36 +12,37 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useBoardStore } from "@/utils/board"
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 
 type Props = {
   children?: ReactNode;
-  defaultOpen?: boolean;
+  listId: string
 }
  
-export default function AddBoard({ children }: Props) {
+export default function AddTask({ children, listId }: Props) {
 
-    const { addBoard }= useBoardStore()
+    const { addTask }= useBoardStore()
 
-    const handleAddBoard = () => {
-        addBoard({
+    const [title, setTitle] = useState('')
+
+    const handleAddTask = () => {
+        console.log(title)
+        addTask(listId, {
             id: crypto.randomUUID(),
-            title: 'New Board',
-            lists: [],
-            theme: 'lumiflex'
+            title: title
         })
     }
 
   return (
     <Dialog >
-        <DialogTrigger>
+        <DialogTrigger asChild>
             {children}
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
-                <DialogTitle>Crear Tablero</DialogTitle>
+                <DialogTitle>Crear Tarea</DialogTitle>
                 <DialogDescription>
-                    Crea un nuevo tablero. Haga clic en guardar cuando haya terminado.
+                    Crea un nueva tarea. Haga clic en guardar cuando haya terminado.
                 </DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
@@ -51,7 +52,7 @@ export default function AddBoard({ children }: Props) {
                     </Label>
                     <Input
                     id="name"
-                    defaultValue="Nueva Tabla"
+                    onChange={(e) => setTitle(e.target.value)}
                     className="col-span-3"
                     />
                 </div>
@@ -59,9 +60,9 @@ export default function AddBoard({ children }: Props) {
             <DialogFooter>
                 <DialogClose asChild>
                     <Button
-                        onClick={handleAddBoard}
+                        onClick={handleAddTask}
                         type="submit">
-                            Guardar Tablero
+                            Guardar Lista
                     </Button>
                 </DialogClose>
                 <DialogClose asChild>

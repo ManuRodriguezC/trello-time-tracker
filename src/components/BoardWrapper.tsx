@@ -35,7 +35,7 @@ export default function BoardWrapper({ id, children, ...rest }: Props) {
             onMouseLeave={() => handleMouseLeave(id)}
             id={id}
             className={cn(
-                "board-wrapper flex justify-between items-center",
+                "board-wrapper flex justify-between items-center h-6",
                 className
             )}>
             {children}

@@ -9,7 +9,7 @@ type Props = {
 
 export default function Task({ task }: Props) {
     return (
-        <BoardWrapper id={task.id} className="p-2 bg-muted rounded-sm text-primary">
+        <BoardWrapper id={task.id} className="px-2 py-4 bg-muted rounded-sm text-primary">
             <div key={task.id}>
                 {task.title}
             </div>

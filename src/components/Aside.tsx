@@ -3,9 +3,9 @@ import { Avatar } from "./ui/avatar";
 import { FolderKanban, Plus, Ellipsis, Pencil } from 'lucide-react';
 import BoardWrapper from "./BoardWrapper";
 import BoardOptions from "./BoardOptions";
-import SetUserName from "./setUserName";
+import SetUserName from "./dialogsBoard/DialogUserName";
 import { useUserStore } from "@/utils/user";
-import AddBoard from "./AddBoard";
+import AddBoard from "./boards/AddBoard";
 import { useBoardStore } from "@/utils/board";
 import { Link } from "react-router-dom";
 

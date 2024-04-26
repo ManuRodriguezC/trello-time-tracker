@@ -1,11 +1,15 @@
 import { create } from 'zustand';
-import { Board as BoardType } from '@/types';
+import { Board as BoardType, List as ListType, TaskType } from '@/types';
 
 type BoardStore = {
     boards: BoardType[];
     addBoard: (board: BoardType) => void;
     setBoard: (board: BoardType) => void;
     removeBoard: (board: string) => void;
+    addList: (boardId: string, list: ListType) => void;
+    updateList: (list: ListType) => void;
+    removeList: (listId: string) => void;
+    addTask: (listId: string, task: TaskType) => void;
 }
 
 const saveToLocalStorage = (boards: BoardType[]) => {
@@ -37,5 +41,64 @@ export const useBoardStore = create<BoardStore>((set) => ({
     
         return { boards: newBoards }
       }),
+
+    addList: (boardId, list) => set(({ boards }) => {
+        const newBoards = boards.map(board => {
+          if (board.id !== boardId) return board
     
+          return {
+            ...board,
+            lists: board.lists.concat(list)
+          }
+        })
+        saveToLocalStorage(newBoards)
+        return {boards: newBoards}
+    }),
+
+    updateList: (list) => set(({ boards }) => {
+        const newBoard = boards.map(board => {
+            const listIndex = board.lists.findIndex(item => item.id === list.id)
+
+            board.lists[listIndex] = list
+
+            return board
+        })
+        saveToLocalStorage(newBoard)
+        return { boards: newBoard }
+    }) 
+        ,
+
+    removeList: (listId) => set(({ boards }) => {
+        const newBoard = boards.map(board => {
+            const lists = board.lists.filter(list => list.id !== listId)
+            return {
+                ...board,
+                lists
+            }
+        })
+        saveToLocalStorage(newBoard)
+        return { boards: newBoard}
+    }),
+
+    addTask: (listId, task) => set(({ boards }) => {
+        const newBoards = boards.map(board => {
+          const newLists = board.lists.map(list => {
+            if (list.id !== listId) return list
+    
+            return {
+              ...list,
+              tasks: list.tasks.concat(task)
+            }
+          })
+    
+          return {
+            ...board,
+            lists: newLists
+          }
+        })
+    
+        saveToLocalStorage(newBoards)
+    
+        return { boards: newBoards}
+      }),
 }));

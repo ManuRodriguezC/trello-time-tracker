@@ -8,7 +8,7 @@ import { useState } from "react"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import { cn } from "./lib/utils"
 import { useUserStore } from "./utils/user"
-import SetUserName from "./components/setUserName"
+import SetUserName from "./components/dialogsBoard/DialogUserName"
 import { Outlet } from "react-router-dom"
 
 function App() {
