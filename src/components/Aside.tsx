@@ -7,7 +7,7 @@ import SetUserName from "./dialogsBoard/DialogUserName";
 import { useUserStore } from "@/utils/user";
 import AddBoard from "./boards/AddBoard";
 import { useBoardStore } from "@/utils/board";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Aside() {
     const { user } = useUserStore()
@@ -63,12 +63,14 @@ export default function Aside() {
                 <div id="boards-containers" className="flex flex-col">
                     {
                         boards.map(board => (
-                            <div key={board.id} className="px-4 py-1 hover:bg-slate-300 rounded-sm muted-foreground font-normal">
-                                <BoardWrapper id={`board-${board.id}`}>
-                                    <Link to={`board/${board.id}`}>{board.title}</Link>
-                                    <BoardOptions>
-                                            <Ellipsis size={18} />
-                                    </BoardOptions>
+                            <div key={board.id} className="text-lg hover:bg-slate-300 hover:opacity-60 rounded-sm muted-foreground font-normal">
+                                <BoardWrapper id={`board-${board.id}`} className="h-10">
+                                    <NavLink className={
+                                        ({ isActive }) => isActive
+                                        ? "text-xl flex items-center px-4 py-3 w-full h-full bg-slate-300"
+                                        : "flex items-center px-4 py-3 w-full h-full"
+                                    }
+                                    to={`board/${board.id}`}>{board.title}</NavLink>
                                 </BoardWrapper>
                             </div>
                         )

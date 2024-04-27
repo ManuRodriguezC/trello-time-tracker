@@ -21,23 +21,26 @@ export default function List({ list, boardName }: Props) {
     const { removeList, updateList } = useBoardStore()
     const [title, setTitle] = useState<string>(list.title)
     const [remove, setRemove] = useState<boolean>(false)
-    const [todoList, todos] = useDragAndDrop<HTMLDivElement, TaskType>(
+
+    const [todoList, todos, setTodos] = useDragAndDrop<HTMLDivElement, TaskType>(
         list.tasks,
         {
             group: boardName,
             plugins: [animations()]
         }
     )
-    const [tasks, setTasks] = useState<TaskType[]>(list.tasks)
+
 
     useEffect(() => {
-        if (list.tasks.length === tasks.length) return
-        setTasks(list.tasks)
-        todos.push(list.tasks[list.tasks.length-1])
+        if (list.tasks.length === todos.length) return
+        setTodos(list.tasks)
     }, [list])
 
     useEffect(() => {
-        setTasks(todos)
+        updateList({
+            ...list,
+            tasks: todos
+        })
     }, [todos])
 
     useEffect(() => {
@@ -71,9 +74,9 @@ export default function List({ list, boardName }: Props) {
                     </BoardOptions>
                 </BoardWrapper>
                 <Separator />
-                <div ref={todoList} id={`list-${list.id}-tasks`} className="flex flex-col gap-3 w-full">
+                <div ref={todoList} id={`list-${list.id}-tasks`} className="flex flex-col py-2 gap-3 w-full">
                     {
-                        tasks.map(task => (
+                        todos.map(task => (
                             <Task key={`task-${task.id}`} task={task} />
                         ))
                     }

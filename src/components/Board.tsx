@@ -8,30 +8,38 @@ import { useEffect, useState } from "react";
 import { themes } from "./themesOptions/ThemesOptions";
 import AddList from "./lists/AddList";
 import DropDownMenuOptions from "./DropDownMenuOptions";
+import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 
 
 export default function Board() {
     const { boards, setBoard: setNewBoard, removeBoard } = useBoardStore()
     const { boardId } = useParams()
-    const navigate = useNavigate()
-
     const [board, setBoard] = useState<TypeBoard>(boards.find(currBoard => currBoard.id == boardId)!)
-    
     const [title, setTitle] = useState(board.title)
     const [theme, setTheme] = useState<Theme>(board.theme)
     const [remove, setRemove] = useState<boolean>(false)
-    const [lists, setLists] = useState<TypeList[]>(board.lists)
+    const navigate = useNavigate()
 
+    const [listParent, lists, setLists] = useDragAndDrop<HTMLDivElement, TypeList>(
+        board.lists,
+    )
+    
     useEffect(() => {
         const newBoard = {
             ...board,
             title,
             theme
         }
-
         setBoard(newBoard)
         setNewBoard(newBoard)
     }, [title, theme])
+
+    useEffect(() => {
+        setNewBoard({
+            ...board,
+            lists
+        })
+    }, [lists])
 
     useEffect(() => {
         if (!remove || !boardId) return
@@ -74,11 +82,13 @@ export default function Board() {
                 <Separator />
 
                 <div id="board-content" className="flex items-start gap-4 p-4 overflow-x-scroll h-full">
+                    <div ref={listParent} className="flex gap-4">
                     {
                         lists.map(list => (
                             <List key={`list- ${list.id}`} list={list} boardName={board.title}/>
                         ))
                     }
+                    </div>
                     <AddList boardId={board.id}>
                         <div
                             key="add-list"
