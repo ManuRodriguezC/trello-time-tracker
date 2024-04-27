@@ -43,7 +43,7 @@ export default function DropDownMenuOptions (props: Props) {
             )
           }
           <SetBoardTitle open={titleMenuOpen} setOpen={setTitleMenuOpen} setTitle={props.setTitle} />
-          <SetBoardDelete open={removeMenuOpen} setOpen={setRemoveMenuOpen} setDelete={props.setRemove} />
+          <SetBoardDelete open={removeMenuOpen} setOpen={setRemoveMenuOpen} setDelete={props.setRemove} type={DropdownMenuOptionsMap[props.type]}/>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
