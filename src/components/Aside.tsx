@@ -1,13 +1,13 @@
 import { Separator } from "./ui/separator";
 import { Avatar } from "./ui/avatar";
-import { FolderKanban, Plus, Ellipsis, Pencil } from 'lucide-react';
+import { FolderKanban, Plus, Pencil } from 'lucide-react';
 import BoardWrapper from "./BoardWrapper";
 import BoardOptions from "./BoardOptions";
 import SetUserName from "./dialogsBoard/DialogUserName";
 import { useUserStore } from "@/utils/user";
 import AddBoard from "./boards/AddBoard";
 import { useBoardStore } from "@/utils/board";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export default function Aside() {
     const { user } = useUserStore()

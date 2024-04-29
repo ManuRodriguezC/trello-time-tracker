@@ -4,6 +4,7 @@ import App from './App.tsx'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import Board from "./components/Board"
+import Start from './components/Start.tsx'
 
 
 const router = createBrowserRouter([
@@ -15,6 +16,10 @@ const router = createBrowserRouter([
         path: '/board/:boardId',
         element: <Board />
       },
+      {
+        path: '/start',
+        element: <Start />
+      }
     ]
   }
 ])

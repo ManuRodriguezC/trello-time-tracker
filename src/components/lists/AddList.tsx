@@ -29,7 +29,8 @@ export default function AddList({ children, boardId }: Props) {
         addList(boardId, {
             id: crypto.randomUUID(),
             title: title,
-            tasks: []
+            tasks: [],
+            time: 0
         })
     }
 

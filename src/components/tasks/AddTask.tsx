@@ -29,7 +29,8 @@ export default function AddTask({ children, listId }: Props) {
         console.log(title)
         addTask(listId, {
             id: crypto.randomUUID(),
-            title: title
+            title: title,
+            time: 0
         })
     }
 

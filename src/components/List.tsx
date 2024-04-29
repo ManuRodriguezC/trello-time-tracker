@@ -5,31 +5,68 @@ import { Ellipsis, Plus } from "lucide-react";
 import type { List as TypeList, TaskType } from "@/types"
 import Task from "./Task"
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
-import { animations } from "@formkit/drag-and-drop";
+import { DNDPlugin, addEvents, animations, parents } from "@formkit/drag-and-drop";
 import DropDownMenuOptions from "./DropDownMenuOptions";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useBoardStore } from "@/utils/board";
 import AddTask from "./tasks/AddTask";
 
 type Props = {
     list: TypeList,
     boardName: string,
+    dragStatus: boolean,
+    setDragStatus: Dispatch<SetStateAction<boolean>>;
 }
+   
 
 
-export default function List({ list, boardName }: Props) {
+export default function List({ list, boardName, dragStatus, setDragStatus }: Props) {
     const { removeList, updateList } = useBoardStore()
     const [title, setTitle] = useState<string>(list.title)
     const [remove, setRemove] = useState<boolean>(false)
-
+    
+    const dragStatusPlugin: DNDPlugin = (parent) => {
+        const parentData = parents.get(parent);
+        if (!parentData) return;
+        
+        function dragstart() {
+           setDragStatus(true);
+        }
+        
+        function dragend() {
+            setDragStatus(false);
+        }
+        
+        return {
+           setup() {},
+           
+           teardown() {},
+           
+           setupNode(data) {
+               data.nodeData.abortControllers.customPlugin = addEvents(data.node, {
+                   dragstart: dragstart,
+                   dragend: dragend,
+                });
+            },
+            
+            tearDownNode(data) {
+                if (data.nodeData?.abortControllers?.customPlugin) {
+                    data.nodeData.abortControllers.customPlugin.abort();
+                }
+            },
+            
+            setupNodeRemap() {},
+            
+            tearDownNodeRemap() {},
+        };
+    };
     const [todoList, todos, setTodos] = useDragAndDrop<HTMLDivElement, TaskType>(
         list.tasks,
         {
             group: boardName,
-            plugins: [animations()]
+            plugins: [animations(), dragStatusPlugin]
         }
     )
-
 
     useEffect(() => {
         if (list.tasks.length === todos.length) return
@@ -37,6 +74,7 @@ export default function List({ list, boardName }: Props) {
     }, [list])
 
     useEffect(() => {
+        if (dragStatus) return
         updateList({
             ...list,
             tasks: todos
@@ -45,6 +83,7 @@ export default function List({ list, boardName }: Props) {
 
     useEffect(() => {
         if (!title) return
+        if(dragStatus) return
         updateList({
             ...list,
             title

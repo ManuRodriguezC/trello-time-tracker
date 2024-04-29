@@ -38,7 +38,8 @@ export default function AddBoard({ children }: Props) {
             id: crypto.randomUUID(),
             title: title,
             lists: [],
-            theme: getRandomTheme(themes)
+            theme: getRandomTheme(themes),
+            time: 0
         }
         addBoard(newBoard)
         navigate(`board/${newBoard.id}`)

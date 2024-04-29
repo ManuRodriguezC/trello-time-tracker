@@ -9,6 +9,7 @@ import { themes } from "./themesOptions/ThemesOptions";
 import AddList from "./lists/AddList";
 import DropDownMenuOptions from "./DropDownMenuOptions";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
+import Timer from "@/components/Timer";
 
 
 export default function Board() {
@@ -18,6 +19,7 @@ export default function Board() {
     const [title, setTitle] = useState(board.title)
     const [theme, setTheme] = useState<Theme>(board.theme)
     const [remove, setRemove] = useState<boolean>(false)
+    const [drag, setDrag] = useState<boolean>(false)
     const navigate = useNavigate()
 
     const [listParent, lists, setLists] = useDragAndDrop<HTMLDivElement, TypeList>(
@@ -70,12 +72,16 @@ export default function Board() {
                     className="w-full h-24 flex items-center p-4 bg-slate-800
                     bg-opacity-60 text-primary-foreground justify-between shadow-xl">
                     <h2 className="pl-4 font-semibold text-3xl ">{title}</h2>
-                        
-                    <DropDownMenuOptions type="board" setTitle={setTitle} setTheme={setTheme} setRemove={setRemove}>
-                        <div className="p-1 hover:bg-slate-900 hover:opacity-25 rounded-lg cursor-pointer">
-                            <Ellipsis size={24}/>
+                    <div className="flex flex-row items-center gap-5">
+                        <Timer lists={lists}/>
+                        <div className="flex">
+                            <DropDownMenuOptions type="board" setTitle={setTitle} setTheme={setTheme} setRemove={setRemove}>
+                                <div className="p-1 hover:bg-slate-900 hover:opacity-25 rounded-lg cursor-pointer">
+                                    <Ellipsis size={24}/>
+                                </div>
+                            </DropDownMenuOptions>
                         </div>
-                    </DropDownMenuOptions>
+                    </div>
 
                 </div>
 
@@ -85,7 +91,12 @@ export default function Board() {
                     <div ref={listParent} className="flex gap-4">
                     {
                         lists.map(list => (
-                            <List key={`list- ${list.id}`} list={list} boardName={board.title}/>
+                            <List
+                                key={`list- ${list.id}`}
+                                list={list}
+                                boardName={board.title}
+                                dragStatus={drag}
+                                setDragStatus={setDrag}/>
                         ))
                     }
                     </div>
