@@ -10,7 +10,9 @@ export default function Header() {
                     <h1 className="font-medium h-full text-2xl">Trello</h1>
                 </div>
             </NavLink>
-            <AlarmClock />
+            <NavLink to={'/start'}>
+                <AlarmClock className='cursor-pointer' />
+            </NavLink>
         </header>
     )
 }
