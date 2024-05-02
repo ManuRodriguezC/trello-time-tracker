@@ -60,7 +60,7 @@ export default function Timer ({ lists }: {
     return (
         <div className="flex gap-4 items-center">
             <Select onValueChange={handleValueChange}>
-                <SelectTrigger className="w-[180px] text-foreground">
+                <SelectTrigger className="w-[80px] lg:w-[180px] text-foreground">
                     <SelectValue placeholder="Listas"/>
                 </SelectTrigger>
                 <SelectContent>

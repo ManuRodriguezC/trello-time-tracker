@@ -69,9 +69,9 @@ export default function Board() {
             <div className="absolute top-0 left-0 w-full h-[calc(100vh-9.2rem)]">
                 <div
                     id="board-header"
-                    className="w-full h-24 flex items-center p-4 bg-slate-800
+                    className="w-full h-24 flex flex-col lg:flex-row items-center p-4 bg-slate-800
                     bg-opacity-60 text-primary-foreground justify-between shadow-xl">
-                    <h2 className="pl-4 font-semibold text-3xl ">{title}</h2>
+                    <h2 className="pl-4 font-semibold text-2xl lg:text-3xl ">{title}</h2>
                     <div className="flex flex-row items-center gap-5">
                         <Timer lists={lists}/>
                         <div className="flex">

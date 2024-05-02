@@ -124,6 +124,7 @@ export default function Start() {
         workTimes.current = 0
         setWork(StartOptions[option].work)
         setRest(StartOptions[option].rest)
+        formatTime(StartOptions[option].work, setDisplay)
         setMode('Trabajo')
     }, [option])
 
@@ -134,17 +135,17 @@ export default function Start() {
                 <Button onClick={() => handleChangeValue('25/5')} variant={'outline'} className="hover:bg-slate-200">25/5</Button>
                 <Button onClick={() => handleChangeValue('50/10')} variant={'outline'} className="hover:bg-slate-200">50/10</Button>
             </div>
-            <span className="font-semibold text-9xl">{display}</span>
+            <span className="font-semibold text-6xl lg:text-9xl">{display}</span>
             <div id="action-buttons">
                 {!play
                     ? <Button disabled={!list} onClick={handlePlay}>Empezar</Button>
                     : <Button onClick={handlePause}>Detener</Button>
                 }
             </div>
-            <div id="select-list">
+            <div id="select-list" className="flex flex-col gap-4 items-center">
                 <Label htmlFor="list-to-time">Selecciona una lista para asignar tiempo</Label>
                 <Select onValueChange={handleSeletedListChange}>
-                    <SelectTrigger className="w-[280px]">
+                    <SelectTrigger className="w-[250px]">
                         <SelectValue placeholder="Selecciona una lista" />
                     </SelectTrigger>
                     <SelectContent>

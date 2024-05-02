@@ -42,7 +42,7 @@ function App() {
             cn(
               "transition-all duration-500",
               asideOpen
-              ? `absolute top-8 left-[96%] z-50`
+              ? `absolute top-2 lg:top-10 left-[96%] z-50`
               : `absolute top-20 left-[0.6%] z-50`
             )
             }

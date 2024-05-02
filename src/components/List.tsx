@@ -79,7 +79,7 @@ export default function List({ list, boardName, dragStatus, setDragStatus }: Pro
             ...list,
             tasks: todos
         })
-    }, [todos])
+    }, [dragStatus])
 
     useEffect(() => {
         if (!title) return
